@@ -4,18 +4,17 @@ use tauri::{
 };
 
 #[cfg(desktop)]
+use desktop::Btleplug;
+pub use error::{Error, Result};
+#[cfg(mobile)]
+use mobile::Btleplug;
+
+#[cfg(desktop)]
 mod desktop;
 #[cfg(mobile)]
 mod mobile;
 
 mod error;
-
-pub use error::{Error, Result};
-
-#[cfg(desktop)]
-use desktop::Btleplug;
-#[cfg(mobile)]
-use mobile::Btleplug;
 
 /// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the btleplug APIs.
 pub trait BtleplugExt<R: Runtime> {
@@ -31,13 +30,25 @@ impl<R: Runtime, T: Manager<R>> crate::BtleplugExt<R> for T {
 /// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::new("btleplug")
-        .invoke_handler(tauri::generate_handler![])
         .setup(|app, api| {
             #[cfg(mobile)]
             let btleplug = mobile::init(app, api)?;
             #[cfg(desktop)]
             let btleplug = desktop::init(app, api)?;
             app.manage(btleplug);
+
+            #[cfg(target_os = "android")]
+            {
+                app.listen("tauri://btleplug/init", move |msg| {
+                    let ctx = ndk_context::android_context();
+
+                    let vm = unsafe { jni::JavaVM::from_raw(ctx.vm().cast()) }.unwrap();
+                    let env = vm.attach_current_thread().unwrap();
+                    //let context = unsafe { jni::objects::JObject::from_raw(ctx.context().cast()) };
+                    btleplug::platform::init(&env).unwrap();
+                    println!("btleplug initialized");
+                });
+            }
 
             Ok(())
         })

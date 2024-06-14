@@ -3,6 +3,7 @@ package com.plugin.btleplug
 import android.Manifest
 import android.app.Activity
 import android.os.Build
+import android.webkit.WebView
 import app.tauri.annotation.Command
 import app.tauri.annotation.InvokeArg
 import app.tauri.annotation.Permission
@@ -20,4 +21,8 @@ import app.tauri.plugin.Invoke
   ]
 )
 class BtleplugPlugin(private val activity: Activity): Plugin(activity) {
+  override fun load(webView: WebView) {
+    println("BtleplugPlugin loaded")
+    this.trigger("btleplug:ready", JSObject())
+  }
 }

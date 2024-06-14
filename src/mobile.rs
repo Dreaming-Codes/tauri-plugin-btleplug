@@ -20,23 +20,8 @@ pub fn init<R: Runtime, C: DeserializeOwned>(
     let handle = api.register_android_plugin(PLUGIN_IDENTIFIER, "BtleplugPlugin")?;
     #[cfg(target_os = "ios")]
     let handle = api.register_ios_plugin(init_plugin_btleplug)?;
-
+    
     Ok(Btleplug(handle))
-}
-
-
-
-#[cfg(target_os = "android")]
-pub static JAVAVM: OnceCell<jni::JavaVM> = OnceCell::new();
-
-#[cfg(target_os = "android")]
-#[no_mangle]
-pub extern "C" fn JNI_OnLoad(vm: jni::JavaVM, res: *const std::os::raw::c_void) -> jni::sys::jint {
-    let env = vm.get_env().unwrap();
-    jni_utils::init(&env).unwrap();
-    btleplug::platform::init(&env).unwrap();
-    let _ = JAVAVM.set(vm);
-    jni::JNIVersion::V6.into()
 }
 
 
