@@ -11,8 +11,10 @@ import app.tauri.plugin.Plugin
   permissions = [
     Permission(strings = [Manifest.permission.BLUETOOTH], alias = "bluetooth"),
     Permission(strings = [Manifest.permission.BLUETOOTH_ADMIN], alias = "bluetoothAdmin"),
+    Permission(strings = [Manifest.permission.BLUETOOTH_ADVERTISE], alias = "bluetoothAdvertise"),
+    Permission(strings = [Manifest.permission.BLUETOOTH_CONNECT], alias = "bluetoothConnect"),
+    Permission(strings = [Manifest.permission.BLUETOOTH_PRIVILEGED], alias = "bluetoothPrivileged"),
     Permission(strings = [Manifest.permission.BLUETOOTH_SCAN], alias = "bluetoothScan"),
-    Permission(strings = [Manifest.permission.BLUETOOTH_CONNECT], alias = "bluetoothConnect")
   ]
 )
 class BtleplugPlugin(private val activity: Activity): Plugin(activity) {
