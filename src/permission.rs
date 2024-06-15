@@ -52,7 +52,6 @@ pub struct PermissionResponse {
     pub bluetooth_admin: PermissionState,
     pub bluetooth_advertise: PermissionState,
     pub bluetooth_connect: PermissionState,
-    pub bluetooth_privileged: PermissionState,
     pub bluetooth_scan: PermissionState,
 }
 
@@ -63,6 +62,5 @@ pub struct RequestPermission {
     pub bluetooth_admin: bool,
     pub bluetooth_advertise: bool,
     pub bluetooth_connect: bool,
-    pub bluetooth_privileged: bool,
     pub bluetooth_scan: bool,
 }

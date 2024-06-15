@@ -254,6 +254,13 @@
           ]
         },
         {
+          "description": "btleplug:allow-check-permission -> Enables the check_permission command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "btleplug:allow-check-permission"
+          ]
+        },
+        {
           "description": "btleplug:allow-execute -> Enables the execute command without any pre-configured scope.",
           "type": "string",
           "enum": [
@@ -268,6 +275,20 @@
           ]
         },
         {
+          "description": "btleplug:allow-request-permission -> Enables the request_permission command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "btleplug:allow-request-permission"
+          ]
+        },
+        {
+          "description": "btleplug:deny-check-permission -> Denies the check_permission command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "btleplug:deny-check-permission"
+          ]
+        },
+        {
           "description": "btleplug:deny-execute -> Denies the execute command without any pre-configured scope.",
           "type": "string",
           "enum": [
@@ -279,6 +300,13 @@
           "type": "string",
           "enum": [
             "btleplug:deny-ping"
+          ]
+        },
+        {
+          "description": "btleplug:deny-request-permission -> Denies the request_permission command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "btleplug:deny-request-permission"
           ]
         },
         {

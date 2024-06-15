@@ -16,7 +16,7 @@ mod mobile;
 
 mod error;
 mod java;
-mod permission;
+pub mod permission;
 
 /// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the btleplug APIs.
 pub trait BtleplugExt<R: Runtime> {
