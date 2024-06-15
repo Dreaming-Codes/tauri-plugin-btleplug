@@ -15,6 +15,7 @@ mod desktop;
 mod mobile;
 
 mod error;
+mod java;
 
 /// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the btleplug APIs.
 pub trait BtleplugExt<R: Runtime> {
@@ -36,19 +37,6 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             #[cfg(desktop)]
             let btleplug = desktop::init(app, api)?;
             app.manage(btleplug);
-
-            #[cfg(target_os = "android")]
-            {
-                app.listen("tauri://btleplug/init", move |msg| {
-                    let ctx = ndk_context::android_context();
-
-                    let vm = unsafe { jni::JavaVM::from_raw(ctx.vm().cast()) }.unwrap();
-                    let env = vm.attach_current_thread().unwrap();
-                    //let context = unsafe { jni::objects::JObject::from_raw(ctx.context().cast()) };
-                    btleplug::platform::init(&env).unwrap();
-                    println!("btleplug initialized");
-                });
-            }
 
             Ok(())
         })
