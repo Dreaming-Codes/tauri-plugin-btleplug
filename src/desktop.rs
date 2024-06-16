@@ -1,6 +1,7 @@
 use serde::de::DeserializeOwned;
 use tauri::{plugin::PluginApi, AppHandle, Runtime, Manager};
 use btleplug::platform::Manager as BtleManager;
+use tauri::async_runtime::TokioRuntime;
 
 pub fn init<R: Runtime, C: DeserializeOwned>(
     app: &AppHandle<R>,
@@ -17,5 +18,9 @@ impl<R: Runtime> Btleplug<R> {
         let state = self.0.app_handle().state::<crate::PluginState>().inner();
 
         state.manager.lock().unwrap().as_ref().ok_or(crate::Error::ManagerNotInitialized).cloned()
+    }
+
+    pub fn get_runtime(&self) -> crate::Result<&TokioRuntime> {
+        crate::TOKIO_RUNTIME.get().as_ref().cloned().ok_or(crate::Error::RuntimeNotInitialized)
     }
 }

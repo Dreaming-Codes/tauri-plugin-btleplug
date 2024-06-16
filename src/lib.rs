@@ -5,9 +5,11 @@ use tauri::{
     Manager, Runtime,
 };
 use tauri::async_runtime::spawn;
+use tauri::async_runtime::TokioRuntime;
 
 // Re-export the btleplug crate.
 pub use btleplug;
+use tokio::sync::OnceCell;
 
 #[cfg(desktop)]
 use desktop::Btleplug;
@@ -44,6 +46,8 @@ impl<R: Runtime, T: Manager<R>> crate::BtleplugExt<R> for T {
 lazy_static::lazy_static! {
     pub static ref INIT_SENDER: Mutex<Option<tokio::sync::oneshot::Sender<()>>> = Mutex::new(None);
 }
+
+pub static TOKIO_RUNTIME: OnceCell<TokioRuntime> = OnceCell::const_new();
 
 /// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
