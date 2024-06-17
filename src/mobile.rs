@@ -2,7 +2,6 @@ use serde::de::DeserializeOwned;
 use tauri::{plugin::{PluginApi, PluginHandle}, AppHandle, Runtime, Manager};
 use crate::permission::{PermissionResponse, RequestPermission};
 use btleplug::platform::Manager as BtleManager;
-use tauri::async_runtime::TokioRuntime;
 
 #[cfg(target_os = "android")]
 const PLUGIN_IDENTIFIER: &str = "com.plugin.btleplug";
@@ -44,9 +43,5 @@ impl<R: Runtime> Btleplug<R> {
         let state = self.0.app().state::<crate::PluginState>().inner();
 
         state.manager.lock().unwrap().as_ref().ok_or(crate::Error::ManagerNotInitialized).cloned()
-    }
-
-    pub fn get_runtime(&self) -> crate::Result<&TokioRuntime> {
-        crate::TOKIO_RUNTIME.get().as_ref().cloned().ok_or(crate::Error::RuntimeNotInitialized)
     }
 }
