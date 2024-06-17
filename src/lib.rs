@@ -18,7 +18,7 @@ mod desktop;
 mod mobile;
 
 mod error;
-mod java;
+pub mod java;
 pub mod permission;
 
 /// Extensions to [`tauri::App`], [`tauri::AppHandle`] and [`tauri::Window`] to access the btleplug APIs.

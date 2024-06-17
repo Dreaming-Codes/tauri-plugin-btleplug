@@ -1,5 +1,13 @@
+use std::future::Future;
+
 use serde::de::DeserializeOwned;
-use tauri::{plugin::{PluginApi, PluginHandle}, AppHandle, Runtime};
+use tauri::{
+    plugin::{PluginApi, PluginHandle},
+    AppHandle, Runtime,
+};
+use tokio::task::JoinHandle;
+
+use crate::java::utils::RUNTIME;
 use crate::permission::{PermissionResponse, RequestPermission};
 
 #[cfg(target_os = "android")]
@@ -21,7 +29,6 @@ pub fn init<R: Runtime, C: DeserializeOwned>(
     Ok(Btleplug(handle))
 }
 
-
 /// Access to the btleplug APIs.
 pub struct Btleplug<R: Runtime>(PluginHandle<R>);
 
@@ -32,9 +39,21 @@ impl<R: Runtime> Btleplug<R> {
             .map_err(Into::into)
     }
 
-    pub fn request_permissions(&self, permissions: RequestPermission) -> crate::Result<PermissionResponse> {
+    pub fn request_permissions(
+        &self,
+        permissions: RequestPermission,
+    ) -> crate::Result<PermissionResponse> {
         self.0
             .run_mobile_plugin::<PermissionResponse>("requestPermissions", permissions)
             .map_err(Into::into)
+    }
+    
+    pub fn btleplug_context_spawn<F>(&self, future: F) -> JoinHandle<F::Output>
+    where
+        F: Future + Send + 'static,
+        F::Output: Send + 'static,
+    {
+        let runtime = RUNTIME.get().expect("Runtime not initialized");
+        runtime.spawn(future)
     }
 }
