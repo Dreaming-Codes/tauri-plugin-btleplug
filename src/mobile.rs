@@ -1,7 +1,6 @@
 use serde::de::DeserializeOwned;
-use tauri::{plugin::{PluginApi, PluginHandle}, AppHandle, Runtime, Manager};
+use tauri::{plugin::{PluginApi, PluginHandle}, AppHandle, Runtime};
 use crate::permission::{PermissionResponse, RequestPermission};
-use btleplug::platform::Manager as BtleManager;
 
 #[cfg(target_os = "android")]
 const PLUGIN_IDENTIFIER: &str = "com.plugin.btleplug";
@@ -37,11 +36,5 @@ impl<R: Runtime> Btleplug<R> {
         self.0
             .run_mobile_plugin::<PermissionResponse>("requestPermissions", permissions)
             .map_err(Into::into)
-    }
-
-    pub fn get_manager(&self) -> crate::Result<BtleManager> {
-        let state = self.0.app().state::<crate::PluginState>().inner();
-
-        state.manager.lock().unwrap().as_ref().ok_or(crate::Error::ManagerNotInitialized).cloned()
     }
 }
